@@ -58,6 +58,7 @@ jobs:
           role_arn: arn:aws:iam::533267095856:role/circleci
           role_session_name: app01
           session_duration: '3600'
+          export-credentials: true
       - aws-ecs/update_service:
           cluster: bgdemo-demo-nonprod
           container_image_name_updates: container=nginx-bg-dev,tag=1.28.0

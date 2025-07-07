@@ -53,7 +53,7 @@ jobs:
       # Checkout the code as the first step.
       - checkout
       - aws-cli/setup:
-          profile_name: OIDC-PROFILE
+          # profile_name: OIDC-PROFILE
           region: us-east-1
           role_arn: arn:aws:iam::533267095856:role/circleci
           role_session_name: app01

@@ -16,7 +16,7 @@ executors:
 
 orbs:
   aws-cli: circleci/aws-cli@5.1.0
-  aws-ecs: circleci/aws-ecs@6.0.0
+  aws-ecs: circleci/aws-ecs@7.0.0
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
@@ -58,7 +58,6 @@ jobs:
           role_arn: arn:aws:iam::533267095856:role/circleci
           role_session_name: app01
           session_duration: '3600'
-          export-credentials: true
       - aws-ecs/update_service:
           cluster: bgdemo-demo-nonprod
           container_image_name_updates: container=nginx-bg-dev,tag=1.28.0

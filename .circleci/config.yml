@@ -9,6 +9,14 @@ executors:
     docker:
       - image: cimg/base:current
     working_directory: ~/repo
+  aws-executor:
+    docker:
+      - image: cimg/python:3.10
+    working_directory: ~/repo
+
+orbs:
+  aws-cli: circleci/aws-cli@5.1.0
+  aws-ecs: circleci/aws-ecs@6.0.0
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
@@ -36,6 +44,27 @@ jobs:
           name: "Test Project"
           command: "echo Testing Project!"
 
+  update-tag:
+    executor: aws-executor
+
+    # Add steps to the job
+    # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
+    steps:
+      # Checkout the code as the first step.
+      - checkout
+      - aws-cli/setup:
+          profile_name: OIDC-PROFILE
+          region: us-east-1
+          role_arn: arn:aws:iam::533267095856:role/circleci
+          role_session_name: app01
+          session_duration: '3600'
+      - aws-ecs/update_service:
+          cluster: bgdemo-demo-nonprod
+          container_image_name_updates: container=nginx-bg-dev,tag=1.28.0
+          family: nginx-bg-dev
+          region: us-east-1
+      
+
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
@@ -49,3 +78,6 @@ workflows:
           # filters:
           #   branches:
           #     only: main # This job will only run on the main branch.
+      - update-tag:
+          requires:
+            - test # This job will run after the test job is completed successfully.

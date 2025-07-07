@@ -63,6 +63,11 @@ jobs:
           container_image_name_updates: container=nginx-bg-dev,tag=1.28.0
           family: nginx-bg-dev
           region: us-east-1
+      - aws-ecs/deploy_service_update:
+          cluster: bgdemo-demo-nonprod
+          family: nginx-bg-dev
+          service_name: nginx-bg-dev-green
+          region: us-east-1
       
 
 # Orchestrate jobs using workflows
